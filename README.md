@@ -458,7 +458,7 @@ Using this folder as a guide can be particularly helpful for:
 
 ## Documentation
 
-TODO ):
+TODO ): right now generate markdown to pdf resume, going to generate latex to pdf resume
 
 ## Troubleshooting
 
