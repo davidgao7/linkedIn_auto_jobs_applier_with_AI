@@ -13,12 +13,12 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
-# NOTE: this is because I didn't choose to install package, there will have two same folder name once pull the code
+
 from lib_resume_builder_AIHawk.lib_resume_builder_AIHawk import (
     Resume,
-    StyleManager,
-    FacadeManager,
-    ResumeGenerator,
+    LatexStyleManager,
+    LatexFacadeManager,
+    LatexResumeGenerator,
 )
 from src.utils import chromeBrowserOptions
 from src.gpt import GPTAnswerer
@@ -54,8 +54,15 @@ class ConfigValidator:
         except FileNotFoundError:
             raise ConfigError(f"File not found: {yaml_path}")
 
+    @staticmethod
     def validate_config(config_yaml_path: Path) -> dict:
+        """
+        validate if required keys are present in the yaml
+        """
+
+        # 1. validate if the yaml config file exists and is readable
         parameters = ConfigValidator.validate_yaml_file(config_yaml_path)
+
         required_keys = {
             "remote": bool,
             "experienceLevel": dict,
@@ -68,6 +75,7 @@ class ConfigValidator:
             "titleBlacklist": list,
         }
 
+        # 2. validate if the required keys are present in the yaml
         for key, expected_type in required_keys.items():
             if key not in parameters:
                 if key in ["companyBlacklist", "titleBlacklist"]:
@@ -95,6 +103,7 @@ class ConfigValidator:
             "director",
             "executive",
         ]
+        # 3. validate if the experience level, job type, and date filters are boolean
         for level in experience_levels:
             if not isinstance(parameters["experienceLevel"].get(level), bool):
                 raise ConfigError(
@@ -110,12 +119,14 @@ class ConfigValidator:
             "other",
             "volunteer",
         ]
+        # 4. validate if the job types are boolean
         for job_type in job_types:
             if not isinstance(parameters["jobTypes"].get(job_type), bool):
                 raise ConfigError(
                     f"Job type '{job_type}' must be a boolean in config file {config_yaml_path}"
                 )
 
+        # 5. validate if the date filters are boolean
         date_filters = ["all time", "month", "week", "24 hours"]
         for date_filter in date_filters:
             if not isinstance(parameters["date"].get(date_filter), bool):
@@ -123,21 +134,26 @@ class ConfigValidator:
                     f"Date filter '{date_filter}' must be a boolean in config file {config_yaml_path}"
                 )
 
+        # 6. validate if the positions and locations are strings
         if not all(isinstance(pos, str) for pos in parameters["positions"]):
             raise ConfigError(
                 f"'positions' must be a list of strings in config file {config_yaml_path}"
             )
+
+        # 7. validate if the locations are strings
         if not all(isinstance(loc, str) for loc in parameters["locations"]):
             raise ConfigError(
                 f"'locations' must be a list of strings in config file {config_yaml_path}"
             )
 
+        # 8. validate if the distance is one of the approved values
         approved_distances = {0, 5, 10, 25, 50, 100}
         if parameters["distance"] not in approved_distances:
             raise ConfigError(
                 f"Invalid distance value in config file {config_yaml_path}. Must be one of: {approved_distances}"
             )
 
+        # 9. validate if the blacklists are lists
         for blacklist in ["companyBlacklist", "titleBlacklist"]:
             if not isinstance(parameters.get(blacklist), list):
                 raise ConfigError(
@@ -244,12 +260,25 @@ def create_and_run_bot(
     email: str, password: str, parameters: dict, openai_api_key: str
 ):
     try:
-        style_manager = StyleManager()
-        resume_generator = ResumeGenerator()
+        style_manager = LatexStyleManager()
+        resume_generator = LatexResumeGenerator()
+
+        # load resume personal information
         with open(parameters["uploads"]["plainTextResume"], "r") as file:
+            print(f"Reading resume from {parameters['uploads']['plainTextResume']}")
             plain_text_resume = file.read()
+
+        # the resume object has attributes:
+        #  - personal_information
+        #  - education_details
+        #  - experience_details
+        #  - projects
+        #  - achievements
+        #  - certifications
+        #  - languages
+        #  - interests
         resume_object = Resume(plain_text_resume)
-        resume_generator_manager = FacadeManager(
+        resume_generator_manager = LatexFacadeManager(
             openai_api_key,
             style_manager,
             resume_generator,
@@ -292,10 +321,13 @@ def create_and_run_bot(
 def main(resume: Path = None):
     try:
         data_folder = Path("data_folder")
+
+        # validate if input/output data folder exists, if not raise error
         secrets_file, config_file, plain_text_resume_file, output_folder = (
             FileManager.validate_data_folder(data_folder)
         )
 
+        # validate if the config and secrets file are valid
         parameters = ConfigValidator.validate_config(config_file)
         email, password, openai_api_key = ConfigValidator.validate_secrets(secrets_file)
 
@@ -304,6 +336,9 @@ def main(resume: Path = None):
         )
         parameters["outputFileDirectory"] = output_folder
 
+        print("Configuration files validated successfully.")
+
+        print("Starting the bot...")
         create_and_run_bot(email, password, parameters, openai_api_key)
     except ConfigError as ce:
         print(f"Configuration error: {str(ce)}")
