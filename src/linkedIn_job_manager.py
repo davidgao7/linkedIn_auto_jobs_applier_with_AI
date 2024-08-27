@@ -80,6 +80,7 @@ class LinkedInJobManager:
 
             try:
                 while True:
+                    # TODO: why sleep when applying each position?
                     page_sleep += 1
                     job_page_number += 1
                     utils.printyellow(f"Going to job page {job_page_number}")

@@ -8,7 +8,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import WebDriverException, TimeoutException
-from lib_resume_builder_AIHawk import Resume,StyleManager,FacadeManager,ResumeGenerator
+# NOTE: this is because I didn't choose to install package, there will have two same folder name once pull the code
+from lib_resume_builder_AIHawk.lib_resume_builder_AIHawk import Resume,StyleManager,FacadeManager,ResumeGenerator
 from src.utils import chromeBrowserOptions
 from src.gpt import GPTAnswerer
 from src.linkedIn_authenticator import LinkedInAuthenticator
@@ -20,6 +21,7 @@ from src.job_application_profile import JobApplicationProfile
 sys.stderr = open(os.devnull, 'w')
 
 class ConfigError(Exception):
+    # NOTE: no error definition???
     pass
 
 class ConfigValidator:
