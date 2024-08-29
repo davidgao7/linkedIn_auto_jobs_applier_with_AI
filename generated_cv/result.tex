@@ -1,0 +1,135 @@
+\documentclass[a4paper,8pt]{article}
+
+\usepackage{parskip} 
+\usepackage{hologo}
+\usepackage{fontspec}
+
+%other packages for formatting
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.9, top=.4in, bottom=.4in]{geometry}
+
+%tabularx environment
+\usepackage{tabularx}
+
+%for lists within experience section
+\usepackage{enumitem}
+
+% centered version of 'X' col. type
+\newcolumntype{C}{>{\centering\arraybackslash}X} 
+
+%to prevent spillover of tabular into next pages
+\usepackage{supertabular}
+\usepackage{tabularx}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.42\textwidth}
+
+%custom \section
+\usepackage{titlesec}				
+\usepackage{multicol}
+\usepackage{multirow}
+
+%CV Sections inspired by: 
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{1pt}{1pt}{1pt}
+
+%for publications
+\usepackage[style=authoryear,sorting=ynt, maxbibnames=2]{biblatex}
+
+%Setup hyperref package, and colours for links
+\usepackage[unicode, draft=false]{hyperref}
+\hypersetup{% to remove hyperlink's border
+    pdfborder = {0 0 0}
+}
+\color[HTML]{110223}%{1C033C}
+\addbibresource{citations.bib}
+\setlength\bibitemsep{1em}
+
+%for social icons
+\usepackage{fontawesome5}
+% \usepackage{times}
+
+% For underline
+\usepackage[normalem]{ulem}
+
+\setmainfont{Arial}  % Set it to whatever you like
+
+\begin{document}
+% non-numbered pages
+\pagestyle{empty} 
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{David Gao} \\[4pt]
+\end{tabularx}
+\begin{tabularx}{\linewidth}{@{} C @{} C @{} C @{} C @{}}
+{\faHome}{Boston, MA}
+{{\raisebox{-0.05\height}{\faEnvelope} \href{mailto:davidgao313@outlook.com}{davidgao313@outlook.com}}}
+{{\raisebox{-0.05\height}{\faMobile} \href{tel:+1 7816551265}{7816551265}}} 
+{{\raisebox{-0.05\height}{\faLinkedin} \href{https://www.linkedin.com/in/tengjun-gao-hello-world/} {David Gao}}}
+{{\raisebox{-0.05\height}{\faGithub} \href{https://github.com/davidgao7}{davidgao7}}}
+{{\raisebox{-0.05\height}{\faLink} \href{https://davidgao7.github.io/Portfolio_x/}{personal website}}}
+\end{tabularx}
+
+%EDUCATION
+\section{\textbf{EDUCATION}}
+\textbf{NORTHEASTERN UNIVERSITY}  \hfill \textbf{Sep 2023 - Expected Mar 2025}\\[4pt]
+\textit{M.S. in Informatics, Cloud Computing concentration}\\[4pt]
+\textbf{UNIVERSITY OF NEBRASKA LINCOLN} \hfill \textbf{Aug 2017 - Aug 2021}\\[4pt]
+\textit{B.S. in Computer Science, Minor in Mathematics and Physics}\\[4pt]
+
+%SKILLS
+\section{\textbf{SKILLS}}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=2pt]
+    \item \textit{Languages}: English (Native)
+    \item \textit{Programming Languages}: \textbf{Python}, \textbf{Java}, \textbf{C++}, \textbf{JavaScript}, \textbf{Go}, C, Haskell, Prolog
+    \item \textit{Data Visualization Tools}: \textbf{Streamlit}, \textbf{Plotly}, Grafana, Matplotlib, Seaborn, Evidently
+    \item \textit{Industrial Work Skills}: \textbf{Hibernate}, Hive, Pyspark, Hadoop, \textbf{Kubernetes}, \textbf{Docker}, Flask, API, Kafka, OpenCV, ML Monitor, Git, \textbf{AWS}, \textbf{GCP}, Linux/Unix, MySQL, REST API, Express.js, HTML, CSS 
+    \item \textit{Data Analysis Tools}: \textbf{scikit-learn}, \textbf{PyTorch}, \textbf{TensorFlow}, Numpy, Pandas
+    \end{itemize}
+
+%EXPERIENCE
+\section{\textbf{EXPERIENCE}}
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{Dongfeng Motor Corporation} \hfill \textbf{Dec 2021 - Aug 2023} \\[3pt]
+\textbf{Machine Learning Engineer | MLOps Project} \hfill \textbf{Jan 2022 - Aug 2023} \\[0.5pt]
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=0.3pt]
+        \item Received the \textbf{Innovation Support Award} for coordinating a \textbf{cross-functional team} to develop \textbf{5 end-to-end ML workflows} using \textbf{Kubeflow}.
+        \item Utilized the Snapdragon Neural Processing Engine SDK on Ubuntu to convert \textbf{TensorFlow} models for Qualcomm 8155 chips, achieving over 85\% accuracy.
+        \item Implemented an \textbf{ML monitoring dashboard} using \textbf{Evidently.ai} and \textbf{Plotly}, reducing model downtime by 90\%.
+        \item Developed an interactive User Feedback Dashboard with \textbf{Streamlit}, resulting in a 60\% increase in concrete requests from first-party buyers.
+    \end{itemize}
+\end{minipage}
+\end{tabularx}
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{Machine Learning Engineer | License Plate Censor API} \hfill \textbf{Dec 2021 - Jan 2022} \\[1pt]
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=2pt]
+        \item Developed a license plate censoring API using \textbf{YOLOv5}, \textbf{Pytorch}, and \textbf{Flask}, achieving an inference speed of 0.26 seconds per image.
+        \item Deployed the model API in an Ubuntu-based image on a \textbf{Kubernetes} cluster, optimizing resource utilization.
+    \end{itemize}
+\end{minipage}
+\end{tabularx}
+
+%PROJECTS
+\section{\textbf{PROJECTS}}
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{AWS Serverless Implementation} \hfill \textbf{Mar 2024 - Nov 2024} \\[0.5pt]
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+        \item Developed a serverless object detection application using \textbf{AWS Lambda} functions, automating the manual inspection process.
+        \item Received 100/100 and praise for excellent implementation from a professor with AWS Academy Accreditation.
+    \end{itemize}
+\end{minipage}
+\end{tabularx}
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{Personal Database Assistant | Python} \hfill \textbf{May 2024 - May 2024} \\[0.5pt]
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+        \item Developed an LLM AI assistant using Python to interpret natural language queries and automatically generate SQL queries, reducing retrieval times from 10s to 5s.
+        \item Enhanced user experience, ensuring consistent correctness in output and boosting efficiency in database interaction.
+    \end{itemize}
+\end{minipage}
+\end{tabularx}
+\end{document}
