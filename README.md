@@ -137,7 +137,7 @@ LinkedIn_AIHawk steps in as a game-changing solution to these challenges. It's n
    pip install -r requirements.txt
    ```
 
-NOTE: if you want to use the lib_resume_builder_AIHawk locally for debug, make sure you set each file import path right.
+NOTE: if you want to use the lib_resume_builder_AIHawk locally for debug, be careful there are two dir with same name for lib_resume_builder_AIHawk
 
 ## Configuration
 
