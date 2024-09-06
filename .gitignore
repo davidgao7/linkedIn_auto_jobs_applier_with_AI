@@ -12,3 +12,5 @@ generated_cv*
 chrome_profile
 answers.json
 jobbot/
+data_folder/
+.env
