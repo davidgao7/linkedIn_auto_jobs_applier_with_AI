@@ -19,7 +19,6 @@ load_dotenv()
 
 
 class LLMLogger:
-    
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm
 
@@ -77,7 +76,6 @@ class LLMLogger:
 
 
 class LoggerChatModel:
-
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm
 
@@ -115,8 +113,13 @@ class LoggerChatModel:
 class GPTAnswerer:
     def __init__(self, openai_api_key, model_name="gpt-4o-mini", temperature=0.8):
         self.llm_cheap = LoggerChatModel(
-            ChatOpenAI(model_name=model_name, openai_api_key=openai_api_key, temperature=temperature)
+            ChatOpenAI(
+                model_name=model_name,
+                openai_api_key=openai_api_key,
+                temperature=temperature,
+            )
         )
+
     @property
     def job_description(self):
         return self.job.description
@@ -144,11 +147,13 @@ class GPTAnswerer:
 
     def set_job(self, job):
         self.job = job
-        self.job.set_summarize_job_description(self.summarize_job_description(self.job.description))
+        self.job.set_summarize_job_description(
+            self.summarize_job_description(self.job.description)
+        )
 
     def set_job_application_profile(self, job_application_profile):
         self.job_application_profile = job_application_profile
-        
+
     def summarize_job_description(self, text: str) -> str:
         strings.summarize_prompt_template = self._preprocess_template_string(
             strings.summarize_prompt_template
@@ -157,23 +162,33 @@ class GPTAnswerer:
         chain = prompt | self.llm_cheap | StrOutputParser()
         output = chain.invoke({"text": text})
         return output
-            
+
     def _create_chain(self, template: str):
         prompt = ChatPromptTemplate.from_template(template)
         return prompt | self.llm_cheap | StrOutputParser()
-    
+
     def answer_question_textual_wide_range(self, question: str) -> str:
         # Define chains for each section of the resume
         chains = {
-            "personal_information": self._create_chain(strings.personal_information_template),
-            "self_identification": self._create_chain(strings.self_identification_template),
-            "legal_authorization": self._create_chain(strings.legal_authorization_template),
+            "personal_information": self._create_chain(
+                strings.personal_information_template
+            ),
+            "self_identification": self._create_chain(
+                strings.self_identification_template
+            ),
+            "legal_authorization": self._create_chain(
+                strings.legal_authorization_template
+            ),
             "work_preferences": self._create_chain(strings.work_preferences_template),
             "education_details": self._create_chain(strings.education_details_template),
-            "experience_details": self._create_chain(strings.experience_details_template),
+            "experience_details": self._create_chain(
+                strings.experience_details_template
+            ),
             "projects": self._create_chain(strings.projects_template),
             "availability": self._create_chain(strings.availability_template),
-            "salary_expectations": self._create_chain(strings.salary_expectations_template),
+            "salary_expectations": self._create_chain(
+                strings.salary_expectations_template
+            ),
             "certifications": self._create_chain(strings.certifications_template),
             "languages": self._create_chain(strings.languages_template),
             "interests": self._create_chain(strings.interests_template),
@@ -273,21 +288,38 @@ class GPTAnswerer:
         section_name = output.lower().replace(" ", "_")
         if section_name == "cover_letter":
             chain = chains.get(section_name)
-            output = chain.invoke({"resume": self.resume, "job_description": self.job_description})
+            output = chain.invoke(
+                {"resume": self.resume, "job_description": self.job_description}
+            )
             return output
-        resume_section = getattr(self.resume, section_name, None) or getattr(self.job_application_profile, section_name, None)
+        resume_section = getattr(self.resume, section_name, None) or getattr(
+            self.job_application_profile, section_name, None
+        )
         if resume_section is None:
-            raise ValueError(f"Section '{section_name}' not found in either resume or job_application_profile.")
+            raise ValueError(
+                f"Section '{section_name}' not found in either resume or job_application_profile."
+            )
         chain = chains.get(section_name)
         if chain is None:
             raise ValueError(f"Chain not defined for section '{section_name}'")
         return chain.invoke({"resume_section": resume_section, "question": question})
 
-    def answer_question_numeric(self, question: str, default_experience: int = 3) -> int:
-        func_template = self._preprocess_template_string(strings.numeric_question_template)
+    def answer_question_numeric(
+        self, question: str, default_experience: int = 3
+    ) -> int:
+        func_template = self._preprocess_template_string(
+            strings.numeric_question_template
+        )
         prompt = ChatPromptTemplate.from_template(func_template)
         chain = prompt | self.llm_cheap | StrOutputParser()
-        output_str = chain.invoke({"resume_educations": self.resume.education_details,"resume_jobs": self.resume.experience_details,"resume_projects": self.resume.projects , "question": question})
+        output_str = chain.invoke(
+            {
+                "resume_educations": self.resume.education_details,
+                "resume_jobs": self.resume.experience_details,
+                "resume_projects": self.resume.projects,
+                "question": question,
+            }
+        )
         try:
             output = self.extract_number_from_string(output_str)
         except ValueError:
@@ -305,10 +337,12 @@ class GPTAnswerer:
         func_template = self._preprocess_template_string(strings.options_template)
         prompt = ChatPromptTemplate.from_template(func_template)
         chain = prompt | self.llm_cheap | StrOutputParser()
-        output_str = chain.invoke({"resume": self.resume, "question": question, "options": options})
+        output_str = chain.invoke(
+            {"resume": self.resume, "question": question, "options": options}
+        )
         best_option = self.find_best_match(output_str, options)
         return best_option
-    
+
     def resume_or_cover(self, phrase: str) -> str:
         # Define the prompt template
         prompt_template = """
