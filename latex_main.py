@@ -11,7 +11,7 @@ import click
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import WebDriverException, TimeoutException
+from selenium.common.exceptions import WebDriverException
 
 
 from lib_resume_builder_AIHawk.lib_resume_builder_AIHawk import (
@@ -263,10 +263,12 @@ def create_and_run_bot(
         style_manager = LatexStyleManager()
         resume_generator = LatexResumeGenerator()
 
-        # load resume personal information
+        # TODO: load resume personal information
         with open(parameters["uploads"]["plainTextResume"], "r") as file:
             print(f"Reading resume from {parameters['uploads']['plainTextResume']}")
             plain_text_resume = file.read()
+
+        exit(0)
 
         # the resume object has attributes:
         #  - personal_information

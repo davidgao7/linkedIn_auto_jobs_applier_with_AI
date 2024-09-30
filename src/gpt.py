@@ -114,8 +114,8 @@ class GPTAnswerer:
     def __init__(self, openai_api_key, model_name="gpt-4o-mini", temperature=0.8):
         self.llm_cheap = LoggerChatModel(
             ChatOpenAI(
-                model_name=model_name,
-                openai_api_key=openai_api_key,
+                name=model_name,
+                api_key=openai_api_key,
                 temperature=temperature,
             )
         )
@@ -168,6 +168,7 @@ class GPTAnswerer:
         return prompt | self.llm_cheap | StrOutputParser()
 
     def answer_question_textual_wide_range(self, question: str) -> str:
+        # NOTE: meat where generate resume
         # Define chains for each section of the resume
         chains = {
             "personal_information": self._create_chain(
